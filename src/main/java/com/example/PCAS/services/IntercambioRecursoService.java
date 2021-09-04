@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.PCAS.entities.Hospital;
 import com.example.PCAS.entities.Recurso;
+import com.example.PCAS.exceptions.ErroDeValidacaoException;
 import com.example.PCAS.repositories.HospitalRepository;
 
 @Service
@@ -21,9 +22,8 @@ public class IntercambioRecursoService {
 		if (verificaPossibilidadeDeEfetuarTroca(hospJaSalvo1, hospJaSalvo2)) {
 			return efetivarTroca(hospJaSalvo1, hospJaSalvo2, recHosp1, recHosp2);
 		} else {
-			//lançar exceção
+			throw new ErroDeValidacaoException("Não foi possível concluir a troca de recursos!");
 		}
-		return null;
 	}
 	
 	public boolean verificaPossibilidadeDeEfetuarTroca(Hospital hosp1, Hospital hosp2) {
