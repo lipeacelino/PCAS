@@ -15,23 +15,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class Recurso {
-/*
-	1 Médico
-	3 pontos
 
-	1 Enfermeiro
-	3 pontos
-
-	1 Respirador
-	5 pontos
-
-	1 Tomógrafo
-	12 ponto
-
-	1 Ambulância
-	10 ponto
-	*/
-	
 	public Recurso() {
 		this.medico = 0;
 		this.enfermeiro = 0;
