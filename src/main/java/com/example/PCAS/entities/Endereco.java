@@ -29,5 +29,10 @@ public class Endereco {
 	private Integer cep;
 	
 	private String estado;
+
+	@Override
+	public String toString() {
+		return "Rua " + rua + ", número " + numero + ", cep " + cep + ", estado " + estado;
+	}
 	
 }

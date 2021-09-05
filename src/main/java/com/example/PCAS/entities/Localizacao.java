@@ -25,5 +25,10 @@ public class Localizacao {
 	private Double latitude;
 	
 	private Double longitude;
+
+	@Override
+	public String toString() {
+		return "Latitude " + latitude + ", Longitude " + longitude;
+	}
 	
 }
