@@ -33,7 +33,7 @@ public class PcasApplication {
 			
 			Localizacao loc2 = locRepository.save(Localizacao.builder().latitude(56.1413).longitude(-43.4193).build());
 			Endereco end2 = endRepository.save(Endereco.builder().cep(86751000).estado("CE").numero(22).rua("Rua Aparecida de Amaral").build());
-			Recurso rec2 = recRepository.save(Recurso.builder().ambulancia(1).tomografo(0).enfermeiro(0).medico(0).respirador(0).build()); 
+			Recurso rec2 = recRepository.save(Recurso.builder().ambulancia(1).tomografo(0).enfermeiro(0).medico(1).respirador(0).build()); 
 			hospRepository.save(Hospital.builder().percOcupacao(90).nome("Hospital Abílio de Oliveira")
 					.cnpj("66120943000166").endereco(end2).localizacao(loc2).recurso(rec2).build());
 		};

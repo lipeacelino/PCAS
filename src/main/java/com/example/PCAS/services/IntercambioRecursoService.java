@@ -50,17 +50,17 @@ public class IntercambioRecursoService {
 		
 		Recurso recHospJaSalvo2 = hospJaSalvo2.getRecurso();
 		
-		recHospJaSalvo1.setAmbulancia(recHosp2.getAmbulancia());
-		recHospJaSalvo1.setEnfermeiro(recHosp2.getEnfermeiro());
-		recHospJaSalvo1.setMedico(recHosp2.getMedico());
-		recHospJaSalvo1.setRespirador(recHosp2.getRespirador());
-		recHospJaSalvo1.setTomografo(recHosp2.getTomografo());
+		recHospJaSalvo1.setAmbulancia((recHospJaSalvo1.getAmbulancia() - recHosp1.getAmbulancia()) + recHosp2.getAmbulancia());
+		recHospJaSalvo1.setEnfermeiro((recHospJaSalvo1.getEnfermeiro() - recHosp1.getEnfermeiro()) + recHosp2.getEnfermeiro());
+		recHospJaSalvo1.setMedico((recHospJaSalvo1.getMedico() - recHosp1.getMedico()) + recHosp2.getMedico());
+		recHospJaSalvo1.setRespirador((recHospJaSalvo1.getRespirador() - recHosp1.getRespirador()) + recHosp2.getRespirador());
+		recHospJaSalvo1.setTomografo((recHospJaSalvo1.getTomografo() - recHosp1.getTomografo()) + recHosp2.getTomografo());
 		
-		recHospJaSalvo2.setAmbulancia(recHosp1.getAmbulancia());
-		recHospJaSalvo2.setEnfermeiro(recHosp1.getEnfermeiro());
-		recHospJaSalvo2.setMedico(recHosp1.getMedico());
-		recHospJaSalvo2.setRespirador(recHosp1.getRespirador());
-		recHospJaSalvo2.setTomografo(recHosp1.getTomografo());
+		recHospJaSalvo2.setAmbulancia((recHospJaSalvo2.getAmbulancia() - recHosp2.getAmbulancia()) + recHosp1.getAmbulancia());
+		recHospJaSalvo2.setEnfermeiro((recHospJaSalvo2.getEnfermeiro() - recHosp2.getEnfermeiro()) + recHosp1.getEnfermeiro());
+		recHospJaSalvo2.setMedico((recHospJaSalvo2.getMedico() - recHosp2.getMedico()) + recHosp1.getMedico());
+		recHospJaSalvo2.setRespirador((recHospJaSalvo2.getRespirador() - recHosp2.getRespirador()) + recHosp1.getRespirador());
+		recHospJaSalvo2.setTomografo((recHospJaSalvo2.getTomografo() - recHosp2.getTomografo()) + recHosp1.getTomografo());
 		
 		hospitalRepository.save(hospJaSalvo2);
 		
