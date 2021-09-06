@@ -27,10 +27,14 @@ public class GeradorDeRelatorio {
 		return hospService.getAll().stream().filter(h -> h.getPercOcupacao() < 90).collect(Collectors.toList());
 	}
 
+	public List<Hospital> relaHospComOcupacaoIgual90() {
+		return hospService.getAll().stream().filter(h -> h.getPercOcupacao() == 90).collect(Collectors.toList());
+	}
+	
 	public List<HistoricoTransacao> historicoTransacoes() {
 		return hihTransacaoService.getAll();
 	}
-
+	
 	public Hospital relaHospitalComOcupacaoMaiorQue90PorMaisTempo() {
 
 		List<Hospital> hospList = hospService.getAll();

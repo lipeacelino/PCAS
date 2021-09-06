@@ -61,7 +61,7 @@ public class PcasApplication {
 			Localizacao loc6 = locRepository.save(Localizacao.builder().latitude(56.1413).longitude(-43.4193).build());
 			Endereco end6 = endRepository.save(Endereco.builder().cep("58100464").estado("CE").numero("287").rua("Travessa Primo José Viana").build());
 			Recurso rec6 = recRepository.save(Recurso.builder().ambulancia(1).tomografo(0).enfermeiro(0).medico(1).respirador(0).build()); 
-			hospRepository.save(Hospital.builder().percOcupacao(88).nome("Hospital Ruan Oliveira")
+			hospRepository.save(Hospital.builder().percOcupacao(90).nome("Hospital Ruan Oliveira")
 					.cnpj("52096543000158").endereco(end6).localizacao(loc6).recurso(rec6).build());
 			
 			

@@ -28,7 +28,12 @@ public class GeradorDePdfService {
 	
 	/*
 	 * Eu optei por gerar um único relatório com todos os requisitos que
-	 * foi pedido na descrição do problema:
+	 * foi pedido na descrição do problema
+	 * 
+	 * Pela descrição do problema os hospitais com ocupção igual a 90% não estavam 
+	 * inclusos em nenhum relatório, portanto tomei a liberdade de uma tabela 
+	 * de hospitais com ocupação igual a 90%
+	 * 
 	 */
 
 	@Autowired
@@ -40,7 +45,8 @@ public class GeradorDePdfService {
 			PdfWriter.getInstance(document, response.getOutputStream());
 
 			document.open();
-
+			
+			relatorioHospitalComOcupacao90(response, document);
 			relatorioHospComOcupacaoMenorQue90(response, document);
 			relatorioHospComOcupacaoMaiorQue90(response, document);
 			relatorioMediaDeRecursos(response, document);
@@ -59,10 +65,7 @@ public class GeradorDePdfService {
 
 	public void relatorioHospComOcupacaoMaiorQue90(HttpServletResponse response, Document document)
 			throws DocumentException, IOException {
-//		Document document = new Document(PageSize.A4);
-//        PdfWriter.getInstance(document, response.getOutputStream());
-//
-//        document.open();
+
 		Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
 		fontTitle.setSize(18);
 
@@ -75,51 +78,57 @@ public class GeradorDePdfService {
 		// tabela
 		PdfPTable table = new PdfPTable(5);
 		table.setWidthPercentage(100f);
-		table.setWidths(new float[] { 1.5f, 3.5f, 4.0f, 3.0f, 2.5f });
+		table.setWidths(new float[] { 1.5f, 3.0f, 4.0f, 1.0f, 2.0f });
 
-		// escrevendo header da tabela
-		PdfPCell cell = new PdfPCell();
-		cell.setBackgroundColor(Color.DARK_GRAY);
-		cell.setPadding(5);
+		List<Hospital> htList = geraDeRelatorioService.relaHospComOcupacaoMaiorQue90();
 
-		Font font = FontFactory.getFont(FontFactory.HELVETICA);
-		font.setColor(Color.WHITE);
+		if (htList.isEmpty()) {
+			Font fontParagraph = FontFactory.getFont(FontFactory.HELVETICA);
+			fontParagraph.setSize(12);
+			Paragraph paragraph2 = new Paragraph("Ainda não há dados para serem exibidos!", fontParagraph);
+			paragraph2.setAlignment(Paragraph.ALIGN_CENTER);
+			document.add(paragraph2);
+		} else {
+			// escrevendo header da tabela
+			PdfPCell cell = new PdfPCell();
+			cell.setBackgroundColor(Color.DARK_GRAY);
+			cell.setPadding(5);
 
-		cell.setPhrase(new Phrase("CNPJ", font));
-		table.addCell(cell);
+			Font font = FontFactory.getFont(FontFactory.HELVETICA);
+			font.setColor(Color.WHITE);
 
-		cell.setPhrase(new Phrase("Nome", font));
-		table.addCell(cell);
+			cell.setPhrase(new Phrase("CNPJ", font));
+			table.addCell(cell);
 
-		cell.setPhrase(new Phrase("Endereço", font));
-		table.addCell(cell);
+			cell.setPhrase(new Phrase("Nome", font));
+			table.addCell(cell);
 
-		cell.setPhrase(new Phrase("Localização", font));
-		table.addCell(cell);
+			cell.setPhrase(new Phrase("Endereço", font));
+			table.addCell(cell);
 
-		cell.setPhrase(new Phrase("Ocupação %", font));
-		table.addCell(cell);
+			cell.setPhrase(new Phrase("Ocup. %", font));
+			table.addCell(cell);
 
-		// escrevendo dados na tabela
-		for (Hospital h : geraDeRelatorioService.relaHospComOcupacaoMaiorQue90()) {
-			table.addCell(h.getCnpj());
-			table.addCell(h.getNome());
-			table.addCell(h.getEndereco().toString());
-			table.addCell(h.getLocalizacao().toString());
-			table.addCell(String.valueOf(h.getPercOcupacao()) + "%");
+			cell.setPhrase(new Phrase("Recursos", font));
+			table.addCell(cell);
+
+			// escrevendo dados na tabela
+			for (Hospital h : geraDeRelatorioService.relaHospComOcupacaoMaiorQue90()) {
+				table.addCell(h.getCnpj());
+				table.addCell(h.getNome());
+				table.addCell(h.getEndereco().toString());
+				table.addCell(String.valueOf(h.getPercOcupacao()) + "%");
+				table.addCell(h.getRecurso().toString());
+			}
 		}
 
 		document.add(table);
 
-//        document.close();
 	}
 
 	public void relatorioHistoricoDeTransacoes(HttpServletResponse response, Document document)
 			throws DocumentException, IOException {
-//		Document document = new Document(PageSize.A4);
-//        PdfWriter.getInstance(document, response.getOutputStream());
-//
-//        document.open();
+
 		Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
 		fontTitle.setSize(18);
 
@@ -178,15 +187,11 @@ public class GeradorDePdfService {
 
 		document.add(table);
 
-//        document.close();
 	}
 
 	public void relatorioMediaDeRecursos(HttpServletResponse response, Document document)
 			throws DocumentException, IOException {
-//		Document document = new Document(PageSize.A4);
-//        PdfWriter.getInstance(document, response.getOutputStream());
-//
-//        document.open();
+
 		Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
 		fontTitle.setSize(18);
 
@@ -236,15 +241,11 @@ public class GeradorDePdfService {
 
 		document.add(table);
 
-//        document.close();
 	}
 
 	public void relatorioHospComOcupacaoMaiorQue90PorMaisTempo(HttpServletResponse response, Document document)
 			throws DocumentException, IOException {
-//		Document document = new Document(PageSize.A4);
-//        PdfWriter.getInstance(document, response.getOutputStream());
-//
-//        document.open();
+		
 		Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
 		fontTitle.setSize(18);
 
@@ -257,7 +258,7 @@ public class GeradorDePdfService {
 		// tabela
 		PdfPTable table = new PdfPTable(5);
 		table.setWidthPercentage(100f);
-		table.setWidths(new float[] { 1.5f, 3.5f, 4.0f, 3.0f, 2.5f });
+		table.setWidths(new float[] { 1.5f, 3.0f, 4.0f, 1.0f, 2.0f });
 
 		// escrevendo header da tabela
 		PdfPCell cell = new PdfPCell();
@@ -276,10 +277,10 @@ public class GeradorDePdfService {
 		cell.setPhrase(new Phrase("Endereço", font));
 		table.addCell(cell);
 
-		cell.setPhrase(new Phrase("Localização", font));
+		cell.setPhrase(new Phrase("Ocup. %", font));
 		table.addCell(cell);
 
-		cell.setPhrase(new Phrase("Ocupação %", font));
+		cell.setPhrase(new Phrase("Recursos", font));
 		table.addCell(cell);
 
 		// escrevendo dados na tabela
@@ -287,20 +288,16 @@ public class GeradorDePdfService {
 		table.addCell(h.getCnpj());
 		table.addCell(h.getNome());
 		table.addCell(h.getEndereco().toString());
-		table.addCell(h.getLocalizacao().toString());
 		table.addCell(String.valueOf(h.getPercOcupacao()) + "%");
-
+		table.addCell(h.getRecurso().toString());
+		
 		document.add(table);
 
-//        document.close();
 	}
 
 	public void relatorioHospComOcupacaoMenorQue90PorMaisTempo(HttpServletResponse response, Document document)
 			throws DocumentException, IOException {
-//		Document document = new Document(PageSize.A4);
-//        PdfWriter.getInstance(document, response.getOutputStream());
-//
-//        document.open();
+
 		Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
 		fontTitle.setSize(18);
 
@@ -313,7 +310,7 @@ public class GeradorDePdfService {
 		// tabela
 		PdfPTable table = new PdfPTable(5);
 		table.setWidthPercentage(100f);
-		table.setWidths(new float[] { 1.5f, 3.5f, 4.0f, 3.0f, 2.5f });
+		table.setWidths(new float[] { 1.5f, 3.0f, 4.0f, 1.0f, 2.0f });
 
 		// escrevendo header da tabela
 		PdfPCell cell = new PdfPCell();
@@ -332,10 +329,10 @@ public class GeradorDePdfService {
 		cell.setPhrase(new Phrase("Endereço", font));
 		table.addCell(cell);
 
-		cell.setPhrase(new Phrase("Localização", font));
+		cell.setPhrase(new Phrase("Ocup. %", font));
 		table.addCell(cell);
 
-		cell.setPhrase(new Phrase("Ocupação %", font));
+		cell.setPhrase(new Phrase("Recursos", font));
 		table.addCell(cell);
 
 		// escrevendo dados na tabela
@@ -343,20 +340,16 @@ public class GeradorDePdfService {
 		table.addCell(h.getCnpj());
 		table.addCell(h.getNome());
 		table.addCell(h.getEndereco().toString());
-		table.addCell(h.getLocalizacao().toString());
-		table.addCell(String.valueOf(h.getPercOcupacao()) + "%");
+		table.addCell(String.valueOf(h.getPercOcupacao())+"%");
+		table.addCell(h.getRecurso().toString());
 
 		document.add(table);
 
-//        document.close();
 	}
 
 	public void relatorioHospComOcupacaoMenorQue90(HttpServletResponse response, Document document)
 			throws DocumentException, IOException {
-//		Document document = new Document(PageSize.A4);
-//        PdfWriter.getInstance(document, response.getOutputStream());
-//
-//        document.open();
+		
 		Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
 		fontTitle.setSize(18);
 
@@ -369,43 +362,115 @@ public class GeradorDePdfService {
 		// tabela
 		PdfPTable table = new PdfPTable(5);
 		table.setWidthPercentage(100f);
-		table.setWidths(new float[] { 1.5f, 3.5f, 4.0f, 3.0f, 2.5f });
+		table.setWidths(new float[] { 1.5f, 3.0f, 4.0f, 1.0f, 2.0f });
 
-		// escrevendo header da tabela
-		PdfPCell cell = new PdfPCell();
-		cell.setBackgroundColor(Color.DARK_GRAY);
-		cell.setPadding(5);
+		List<Hospital> htList = geraDeRelatorioService.relaHospComOcupacaoMenorQue90();
 
-		Font font = FontFactory.getFont(FontFactory.HELVETICA);
-		font.setColor(Color.WHITE);
+		if (htList.isEmpty()) {
+			Font fontParagraph = FontFactory.getFont(FontFactory.HELVETICA);
+			fontParagraph.setSize(12);
+			Paragraph paragraph2 = new Paragraph("Ainda não há dados para serem exibidos!", fontParagraph);
+			paragraph2.setAlignment(Paragraph.ALIGN_CENTER);
+			document.add(paragraph2);
+		} else {
+			// escrevendo header da tabela
+			PdfPCell cell = new PdfPCell();
+			cell.setBackgroundColor(Color.DARK_GRAY);
+			cell.setPadding(5);
 
-		cell.setPhrase(new Phrase("CNPJ", font));
-		table.addCell(cell);
+			Font font = FontFactory.getFont(FontFactory.HELVETICA);
+			font.setColor(Color.WHITE);
 
-		cell.setPhrase(new Phrase("Nome", font));
-		table.addCell(cell);
+			cell.setPhrase(new Phrase("CNPJ", font));
+			table.addCell(cell);
 
-		cell.setPhrase(new Phrase("Endereço", font));
-		table.addCell(cell);
+			cell.setPhrase(new Phrase("Nome", font));
+			table.addCell(cell);
 
-		cell.setPhrase(new Phrase("Localização", font));
-		table.addCell(cell);
+			cell.setPhrase(new Phrase("Endereço", font));
+			table.addCell(cell);
 
-		cell.setPhrase(new Phrase("Ocupação %", font));
-		table.addCell(cell);
+			cell.setPhrase(new Phrase("Ocup. %", font));
+			table.addCell(cell);
 
-		// escrevendo dados na tabela
-		for (Hospital h : geraDeRelatorioService.relaHospComOcupacaoMenorQue90()) {
-			table.addCell(h.getCnpj());
-			table.addCell(h.getNome());
-			table.addCell(h.getEndereco().toString());
-			table.addCell(h.getLocalizacao().toString());
-			table.addCell(String.valueOf(h.getPercOcupacao()) + "%");
+			cell.setPhrase(new Phrase("Recursos", font));
+			table.addCell(cell);
+
+			// escrevendo dados na tabela
+			for (Hospital h : geraDeRelatorioService.relaHospComOcupacaoMenorQue90()) {
+				table.addCell(h.getCnpj());
+				table.addCell(h.getNome());
+				table.addCell(h.getEndereco().toString());
+				table.addCell(String.valueOf(h.getPercOcupacao()) + "%");
+				table.addCell(h.getRecurso().toString());
+			}
+		}
+		
+		document.add(table);
+	
+	}
+
+	public void relatorioHospitalComOcupacao90(HttpServletResponse response, Document document)
+			throws DocumentException, IOException {
+
+		Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+		fontTitle.setSize(18);
+
+		Paragraph paragraph = new Paragraph("Hospitais com ocupação igual a 90%", fontTitle);
+		paragraph.setAlignment(Paragraph.ALIGN_CENTER);
+		paragraph.setSpacingAfter(10);
+		paragraph.setSpacingBefore(35);
+		document.add(paragraph);
+
+		// tabela
+		PdfPTable table = new PdfPTable(5);
+		table.setWidthPercentage(100f);
+		table.setWidths(new float[] { 1.5f, 3.0f, 4.0f, 1.0f, 2.0f });
+
+		List<Hospital> htList = geraDeRelatorioService.relaHospComOcupacaoIgual90();
+
+		if (htList.isEmpty()) {
+			Font fontParagraph = FontFactory.getFont(FontFactory.HELVETICA);
+			fontParagraph.setSize(12);
+			Paragraph paragraph2 = new Paragraph("Ainda não há dados para serem exibidos!", fontParagraph);
+			paragraph2.setAlignment(Paragraph.ALIGN_CENTER);
+			document.add(paragraph2);
+		} else {
+			// escrevendo header da tabela
+			PdfPCell cell = new PdfPCell();
+			cell.setBackgroundColor(Color.DARK_GRAY);
+			cell.setPadding(5);
+
+			Font font = FontFactory.getFont(FontFactory.HELVETICA);
+			font.setColor(Color.WHITE);
+
+			cell.setPhrase(new Phrase("CNPJ", font));
+			table.addCell(cell);
+
+			cell.setPhrase(new Phrase("Nome", font));
+			table.addCell(cell);
+
+			cell.setPhrase(new Phrase("Endereço", font));
+			table.addCell(cell);
+
+			cell.setPhrase(new Phrase("Ocup. %", font));
+			table.addCell(cell);
+
+			cell.setPhrase(new Phrase("Recursos", font));
+			table.addCell(cell);
+
+			// escrevendo dados na tabela
+			for (Hospital h : geraDeRelatorioService.relaHospComOcupacaoIgual90()) {
+				table.addCell(h.getCnpj());
+				table.addCell(h.getNome());
+				table.addCell(h.getEndereco().toString());
+				table.addCell(String.valueOf(h.getPercOcupacao()) + "%");
+				table.addCell(h.getRecurso().toString());
+			}
 		}
 
 		document.add(table);
 
-//        document.close();
 	}
-
+	
 }
