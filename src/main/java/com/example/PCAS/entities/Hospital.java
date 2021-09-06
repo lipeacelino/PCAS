@@ -45,8 +45,14 @@ public class Hospital {
 	@OneToOne
 	private Localizacao localizacao;
 	
-	//A cada transação as datas são atualizadas, a data mais velha pertence ao 
-	//hospital que mantém o percentual de ocupação a mais tempo
+	/*
+	 * Cada hospital possui uma data, que dependendo do percentual de ocupação pode ser dateTimeMaiorQue90 ou dateTimeMenor90 
+	 * 
+	 * A cada transação as datas são atualizadas
+	 * 
+	 * A data mais velha pertence ao hospital que mantém o percentual de ocupação a mais tempo
+	 * 
+	 */
 	@JsonIgnore
 	private Date dateTimeMaiorQue90; 
 	@JsonIgnore

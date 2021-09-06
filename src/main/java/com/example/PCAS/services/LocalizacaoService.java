@@ -18,4 +18,8 @@ public class LocalizacaoService {
 		return repository.findAll();
 	}
 	
+	public Localizacao addLocalizacao(Localizacao localizacao) {
+		return repository.save(localizacao);
+	}
+	
 }

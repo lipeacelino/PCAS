@@ -29,7 +29,8 @@ public class TrocaRecursoController {
 	@ApiOperation(value = "Realiza a troca de recursos entre os hospitais")
 	@ApiResponses(value = {
 		    @ApiResponse(code = 200, message = "Troca de recursos realizada com sucesso"),
-		    @ApiResponse(code = 400, message = "Erro de validação, não foi possível concluir a troca de recrusos")
+		    @ApiResponse(code = 400, message = "Erro de validação, não foi possível concluir a troca de recrusos"),
+		    @ApiResponse(code = 404, message = "Erro ao buscar hospital por ID")
 		})
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(path="/{idHosp1}/{idHosp2}", produces="application/json", consumes="application/json") 

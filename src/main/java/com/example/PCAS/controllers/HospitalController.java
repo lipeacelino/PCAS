@@ -45,6 +45,7 @@ public class HospitalController {
 	@ApiOperation(value = "Atualiza percentual de ocupação do hospital")
 	@ApiResponses(value = {
 		    @ApiResponse(code = 200, message = "Percentual de ocupação atualizado com sucesso"),
+		    @ApiResponse(code = 404, message = "Erro ao buscar hospital por ID")
 		})
 	@PutMapping(path="/{id}", produces="application/json", consumes="application/json")
 	@ResponseStatus(HttpStatus.OK)

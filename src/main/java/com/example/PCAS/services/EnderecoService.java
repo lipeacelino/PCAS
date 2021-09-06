@@ -18,4 +18,8 @@ public class EnderecoService {
 		return repository.findAll();
 	}
 	
+	public Endereco addEndereco(Endereco endereco) {
+		return repository.save(endereco);
+	}
+	
 }

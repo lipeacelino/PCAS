@@ -10,32 +10,30 @@ import com.example.PCAS.DTO.RecursoRelatorioDTO;
 import com.example.PCAS.entities.HistoricoTransacao;
 import com.example.PCAS.entities.Hospital;
 import com.example.PCAS.entities.Recurso;
-import com.example.PCAS.repositories.HistoricoTransacaoRepository;
-import com.example.PCAS.repositories.HospitalRepository;
 
 @Service
 public class GeradorDeRelatorio {
 
 	@Autowired
-	private HospitalRepository hospRepository;
+	private HospitalService hospService;
 	@Autowired
-	private HistoricoTransacaoRepository hihTransacaoRepository;
+	private HistoricoTransacaoService hihTransacaoService;
 
 	public List<Hospital> relaHospComOcupacaoMaiorQue90() {
-		return hospRepository.findAll().stream().filter(h -> h.getPercOcupacao() > 90).collect(Collectors.toList());
+		return hospService.getAll().stream().filter(h -> h.getPercOcupacao() > 90).collect(Collectors.toList());
 	}
 
 	public List<Hospital> relaHospComOcupacaoMenorQue90() {
-		return hospRepository.findAll().stream().filter(h -> h.getPercOcupacao() < 90).collect(Collectors.toList());
+		return hospService.getAll().stream().filter(h -> h.getPercOcupacao() < 90).collect(Collectors.toList());
 	}
 
 	public List<HistoricoTransacao> historicoTransacoes() {
-		return hihTransacaoRepository.findAll();
+		return hihTransacaoService.getAll();
 	}
 
 	public Hospital relaHospitalComOcupacaoMaiorQue90PorMaisTempo() {
 
-		List<Hospital> hospList = hospRepository.findAll();
+		List<Hospital> hospList = hospService.getAll();
 		Hospital hospitalComDataMaisAntiga = null;
 
 		for (int i = 0; i < hospList.size(); i++) {
@@ -44,7 +42,7 @@ public class GeradorDeRelatorio {
 					hospitalComDataMaisAntiga = hospList.get(i);
 				}
 			}
-			for (int j = 1; j < hospRepository.findAll().size(); j++) {
+			for (int j = 1; j < hospService.getAll().size(); j++) {
 				if ((hospList.get(j).getDateTimeMaiorQue90() != null) && (hospitalComDataMaisAntiga != null)) {
 					if (hospitalComDataMaisAntiga.getDateTimeMaiorQue90()
 							.compareTo(hospList.get(j).getDateTimeMaiorQue90()) > 0) {
@@ -60,7 +58,7 @@ public class GeradorDeRelatorio {
 
 	public Hospital relaHospitalComOcupacaoMenorQue90PorMaisTempo() {
 
-		List<Hospital> hospList = hospRepository.findAll();
+		List<Hospital> hospList = hospService.getAll();
 		Hospital hospitalComDataMaisRecente = null;
 
 		for (int i = 0; i < hospList.size(); i++) {
@@ -69,7 +67,7 @@ public class GeradorDeRelatorio {
 					hospitalComDataMaisRecente = hospList.get(i);
 				}
 			}
-			for (int j = 1; j < hospRepository.findAll().size(); j++) {
+			for (int j = 1; j < hospService.getAll().size(); j++) {
 				if ((hospList.get(j).getDateTimeMenorQue90() != null) && (hospitalComDataMaisRecente != null)) {
 					if (hospitalComDataMaisRecente.getDateTimeMenorQue90()
 							.compareTo(hospList.get(j).getDateTimeMenorQue90()) > 0) {
@@ -84,7 +82,7 @@ public class GeradorDeRelatorio {
 
 	public RecursoRelatorioDTO relMediaDeRecursos() {
 
-		List<Recurso> recursosDosHospitais = hospRepository.findAll().stream().map(h -> h.getRecurso())
+		List<Recurso> recursosDosHospitais = hospService.getAll().stream().map(h -> h.getRecurso())
 				.collect(Collectors.toList());
 
 		RecursoRelatorioDTO qtdTotalDeRecursos = new RecursoRelatorioDTO();
@@ -97,7 +95,7 @@ public class GeradorDeRelatorio {
 			qtdTotalDeRecursos.setTomografo(qtdTotalDeRecursos.getTomografo() + r.getTomografo());
 		}
 
-		int qtdDeHospitais = hospRepository.findAll().size();
+		int qtdDeHospitais = hospService.getAll().size();
 
 		qtdTotalDeRecursos.setAmbulancia(qtdTotalDeRecursos.getAmbulancia() / qtdDeHospitais);
 		qtdTotalDeRecursos.setEnfermeiro(qtdTotalDeRecursos.getEnfermeiro() / qtdDeHospitais);

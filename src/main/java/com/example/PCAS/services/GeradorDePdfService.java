@@ -24,7 +24,12 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
 @Service
-public class GeradorDePdfService {
+public class GeradorDePdfService { 
+	
+	/*
+	 * Eu optei por gerar um único relatório com todos os requisitos que
+	 * foi pedido na descrição do problema:
+	 */
 
 	@Autowired
 	private GeradorDeRelatorio geraDeRelatorioService;

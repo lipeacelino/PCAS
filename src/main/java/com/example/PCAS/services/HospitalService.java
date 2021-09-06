@@ -7,10 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.PCAS.entities.Hospital;
-import com.example.PCAS.repositories.EnderecoRepository;
+import com.example.PCAS.exceptions.HospitalNaoEncontradoException;
 import com.example.PCAS.repositories.HospitalRepository;
-import com.example.PCAS.repositories.LocalizacaoRepository;
-import com.example.PCAS.repositories.RecursoRepository;
 
 @Service
 public class HospitalService {
@@ -18,16 +16,16 @@ public class HospitalService {
 	@Autowired
 	private HospitalRepository hospRepository;
 	@Autowired
-	private LocalizacaoRepository locRepository;
+	private LocalizacaoService locRepository;
 	@Autowired
-	private EnderecoRepository endRepository;
+	private EnderecoService endRepository;
 	@Autowired
-	private RecursoRepository recRepository;
+	private RecursoService recRepository;
 	
 	public Hospital addHospital(Hospital hospital) {
-		locRepository.save(hospital.getLocalizacao());
-		endRepository.save(hospital.getEndereco());
-		recRepository.save(hospital.getRecurso());
+		locRepository.addLocalizacao(hospital.getLocalizacao());
+		endRepository.addEndereco(hospital.getEndereco());
+		recRepository.addRecurso(hospital.getRecurso());
 		return hospRepository.save(hospital);
 	}
 	
@@ -46,6 +44,11 @@ public class HospitalService {
 			hospital.setDateTimeMaiorQue90(null);
 		}
 		return hospRepository.save(hospital);
+	}
+
+	public Hospital findById(Long idHosp1) {
+		return hospRepository.findById(idHosp1).orElseThrow(() -> 
+		new HospitalNaoEncontradoException("Erro ao buscar hospital por ID"));
 	}
 	
 }

@@ -7,20 +7,19 @@ import com.example.PCAS.entities.HistoricoTransacao;
 import com.example.PCAS.entities.Hospital;
 import com.example.PCAS.entities.Recurso;
 import com.example.PCAS.exceptions.ErroDeValidacaoException;
-import com.example.PCAS.repositories.HospitalRepository;
 
 @Service
 public class TrocaRecursoService {
 	
 	@Autowired
-	private HospitalRepository hospitalRepository;
+	private HospitalService hospitalRepository;
 	@Autowired
 	private HistoricoTransacaoService histTransacaoService;
 
 	public Hospital trocarRecursos(Long idHosp1, Long idHosp2, Recurso recHosp1, Recurso recHosp2) {
 		
-		Hospital hospJaSalvo1 = hospitalRepository.findById(idHosp1).get();
-		Hospital hospJaSalvo2 = hospitalRepository.findById(idHosp2).get();
+		Hospital hospJaSalvo1 = hospitalRepository.findById(idHosp1);
+		Hospital hospJaSalvo2 = hospitalRepository.findById(idHosp2);
 		
 		if (verificaPossibilidadeDeEfetuarTroca(hospJaSalvo1, hospJaSalvo2)) {
 			return efetivarTroca(hospJaSalvo1, hospJaSalvo2, recHosp1, recHosp2);
@@ -65,8 +64,8 @@ public class TrocaRecursoService {
 		recHospJaSalvo2.setRespirador((recHospJaSalvo2.getRespirador() - recHosp2.getRespirador()) + recHosp1.getRespirador());
 		recHospJaSalvo2.setTomografo((recHospJaSalvo2.getTomografo() - recHosp2.getTomografo()) + recHosp1.getTomografo());
 		
-		hospitalRepository.save(hospJaSalvo2);
-		Hospital hospital = hospitalRepository.save(hospJaSalvo1);
+		hospitalRepository.addHospital(hospJaSalvo2);
+		Hospital hospital = hospitalRepository.addHospital(hospJaSalvo1);
 		
 		HistoricoTransacao ht = HistoricoTransacao
 				.builder()

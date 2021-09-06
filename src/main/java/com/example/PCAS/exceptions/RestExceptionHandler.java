@@ -26,7 +26,7 @@ public class RestExceptionHandler {
     }
 	
 	@ExceptionHandler({IOException.class, DocumentException.class})
-	public ResponseEntity erroAoGerarRelatorio(ErroDeValidacaoException ex) {
+	public ResponseEntity erroAoGerarRelatorio(Exception ex) {
         ErroDetalhes erroDetalhes = ErroDetalhes.builder()
                 .timestamp(this.getDataFormatada())
                 .status(HttpStatus.BAD_REQUEST.value())
@@ -34,6 +34,17 @@ public class RestExceptionHandler {
                 .message(ex.getMessage()).build();
 
         return new ResponseEntity(erroDetalhes, HttpStatus.BAD_REQUEST);
+    }
+	
+	@ExceptionHandler(HospitalNaoEncontradoException.class)
+	public ResponseEntity erroAoBuscarHospital(Exception ex) {
+        ErroDetalhes erroDetalhes = ErroDetalhes.builder()
+                .timestamp(this.getDataFormatada())
+                .status(HttpStatus.NOT_FOUND.value())
+                .error(HttpStatus.NOT_FOUND.name())
+                .message(ex.getMessage()).build();
+
+        return new ResponseEntity(erroDetalhes, HttpStatus.NOT_FOUND);
     }
 	
 	private String getDataFormatada() {
