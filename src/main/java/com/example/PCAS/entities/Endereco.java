@@ -24,9 +24,9 @@ public class Endereco {
 	
 	private String rua;
 	
-	private Integer numero;
+	private String numero;
 	
-	private Integer cep;
+	private String cep;
 	
 	private String estado;
 

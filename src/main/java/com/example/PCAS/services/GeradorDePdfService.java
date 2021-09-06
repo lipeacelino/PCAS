@@ -2,6 +2,7 @@ package com.example.PCAS.services;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -29,19 +30,26 @@ public class GeradorDePdfService {
 	private GeradorDeRelatorio geraDeRelatorioService;
 
 	public void gerarRelatorio(HttpServletResponse response) throws IOException {
-		Document document = new Document(PageSize.A4);
-		PdfWriter.getInstance(document, response.getOutputStream());
+		try {
+			Document document = new Document(PageSize.A4);
+			PdfWriter.getInstance(document, response.getOutputStream());
 
-		document.open();
+			document.open();
 
-		relatorioHospComOcupacaoMenorQue90(response, document);
-		relatorioHospComOcupacaoMaiorQue90(response, document);
-		relatorioMediaDeRecursos(response, document);
-		relatorioHospComOcupacaoMenorQue90PorMaisTempo(response, document);
-		relatorioHospComOcupacaoMaiorQue90PorMaisTempo(response, document);
-		relatorioHistoricoDeTransacoes(response, document);
+			relatorioHospComOcupacaoMenorQue90(response, document);
+			relatorioHospComOcupacaoMaiorQue90(response, document);
+			relatorioMediaDeRecursos(response, document);
+			relatorioHospComOcupacaoMenorQue90PorMaisTempo(response, document);
+			relatorioHospComOcupacaoMaiorQue90PorMaisTempo(response, document);
+			relatorioHistoricoDeTransacoes(response, document);
 
-		document.close();
+			document.close();
+		} catch (DocumentException e) {
+			throw new DocumentException("Erro ao gerar relatório");
+		} catch (IOException e) {
+			throw new IOException("Erro ao gerar relatório");
+		}
+
 	}
 
 	public void relatorioHospComOcupacaoMaiorQue90(HttpServletResponse response, Document document)
@@ -55,16 +63,14 @@ public class GeradorDePdfService {
 
 		Paragraph paragraph = new Paragraph("Hospitais com ocupação maior que 90%", fontTitle);
 		paragraph.setAlignment(Paragraph.ALIGN_CENTER);
-
-		Font fontParagraph = FontFactory.getFont(FontFactory.HELVETICA);
-		fontParagraph.setSize(12);
+		paragraph.setSpacingAfter(10);
+		paragraph.setSpacingBefore(35);
 		document.add(paragraph);
 
 		// tabela
 		PdfPTable table = new PdfPTable(5);
 		table.setWidthPercentage(100f);
 		table.setWidths(new float[] { 1.5f, 3.5f, 4.0f, 3.0f, 2.5f });
-		table.setSpacingBefore(10);
 
 		// escrevendo header da tabela
 		PdfPCell cell = new PdfPCell();
@@ -114,47 +120,55 @@ public class GeradorDePdfService {
 
 		Paragraph paragraph = new Paragraph("Histórico de Negociação", fontTitle);
 		paragraph.setAlignment(Paragraph.ALIGN_CENTER);
-
-		Font fontParagraph = FontFactory.getFont(FontFactory.HELVETICA);
-		fontParagraph.setSize(12);
+		paragraph.setSpacingAfter(10);
+		paragraph.setSpacingBefore(35);
 		document.add(paragraph);
 
 		// tabela
 		PdfPTable table = new PdfPTable(5);
 		table.setWidthPercentage(100f);
 		table.setWidths(new float[] { 1.0f, 1.0f, 2.0f, 1.0f, 1.0f });
-		table.setSpacingBefore(10);
 
-		// escrevendo header da tabela
-		PdfPCell cell = new PdfPCell();
-		cell.setBackgroundColor(Color.DARK_GRAY);
-		cell.setPadding(5);
+		List<HistoricoTransacao> htList = geraDeRelatorioService.historicoTransacoes();
 
-		Font font = FontFactory.getFont(FontFactory.HELVETICA);
-		font.setColor(Color.WHITE);
+		if (htList.isEmpty()) {
+			Font fontParagraph = FontFactory.getFont(FontFactory.HELVETICA);
+			fontParagraph.setSize(12);
+			Paragraph paragraph2 = new Paragraph("Ainda não há dados para serem exibidos!", fontParagraph);
+			paragraph2.setAlignment(Paragraph.ALIGN_CENTER);
+			document.add(paragraph2);
+		} else {
+			// escrevendo header da tabela
+			PdfPCell cell = new PdfPCell();
+			cell.setBackgroundColor(Color.DARK_GRAY);
+			cell.setPadding(5);
 
-		cell.setPhrase(new Phrase("Nome do Hospital", font));
-		table.addCell(cell);
+			Font font = FontFactory.getFont(FontFactory.HELVETICA);
+			font.setColor(Color.WHITE);
 
-		cell.setPhrase(new Phrase("Rec. Usados na Troca", font));
-		table.addCell(cell);
+			cell.setPhrase(new Phrase("Nome do Hospital", font));
+			table.addCell(cell);
 
-		cell.setPhrase(new Phrase("", font));
-		table.addCell(cell);
+			cell.setPhrase(new Phrase("Rec. Usados na Troca", font));
+			table.addCell(cell);
 
-		cell.setPhrase(new Phrase("Nome do Hospital", font));
-		table.addCell(cell);
+			cell.setPhrase(new Phrase("", font));
+			table.addCell(cell);
 
-		cell.setPhrase(new Phrase("Rec. Usados na Troca", font));
-		table.addCell(cell);
+			cell.setPhrase(new Phrase("Nome do Hospital", font));
+			table.addCell(cell);
 
-		// escrevendo dados na tabela
-		for (HistoricoTransacao ht : geraDeRelatorioService.historicoTransacoes()) {
-			table.addCell(ht.getH1().getNome());
-			table.addCell(ht.getRecurso1().toString());
-			table.addCell(ht.getH1().getNome() + ", trocou recursos com " + ht.getH2().getNome());
-			table.addCell(ht.getH2().getNome());
-			table.addCell(ht.getRecurso2().toString());
+			cell.setPhrase(new Phrase("Rec. Usados na Troca", font));
+			table.addCell(cell);
+
+			// escrevendo dados na tabela
+			for (HistoricoTransacao ht : geraDeRelatorioService.historicoTransacoes()) {
+				table.addCell(ht.getH1().getNome());
+				table.addCell(ht.getRecurso1().toString());
+				table.addCell(ht.getH1().getNome() + ", trocou recursos com " + ht.getH2().getNome());
+				table.addCell(ht.getH2().getNome());
+				table.addCell(ht.getRecurso2().toString());
+			}
 		}
 
 		document.add(table);
@@ -173,16 +187,14 @@ public class GeradorDePdfService {
 
 		Paragraph paragraph = new Paragraph("Média de recursos", fontTitle);
 		paragraph.setAlignment(Paragraph.ALIGN_CENTER);
-
-		Font fontParagraph = FontFactory.getFont(FontFactory.HELVETICA);
-		fontParagraph.setSize(12);
+		paragraph.setSpacingAfter(10);
+		paragraph.setSpacingBefore(35);
 		document.add(paragraph);
 
 		// tabela
 		PdfPTable table = new PdfPTable(5);
 		table.setWidthPercentage(100f);
 		table.setWidths(new float[] { 3.0f, 3.0f, 3.0f, 3.0f, 3.0f });
-		table.setSpacingBefore(10);
 
 		// escrevendo header da tabela
 		PdfPCell cell = new PdfPCell();
@@ -233,16 +245,14 @@ public class GeradorDePdfService {
 
 		Paragraph paragraph = new Paragraph("Hospital com ocupação maior que 90% por mais tempo", fontTitle);
 		paragraph.setAlignment(Paragraph.ALIGN_CENTER);
-
-		Font fontParagraph = FontFactory.getFont(FontFactory.HELVETICA);
-		fontParagraph.setSize(12);
+		paragraph.setSpacingAfter(10);
+		paragraph.setSpacingBefore(35);
 		document.add(paragraph);
 
 		// tabela
 		PdfPTable table = new PdfPTable(5);
 		table.setWidthPercentage(100f);
 		table.setWidths(new float[] { 1.5f, 3.5f, 4.0f, 3.0f, 2.5f });
-		table.setSpacingBefore(10);
 
 		// escrevendo header da tabela
 		PdfPCell cell = new PdfPCell();
@@ -291,16 +301,14 @@ public class GeradorDePdfService {
 
 		Paragraph paragraph = new Paragraph("Hospital com ocupação menor que 90% por mais tempo", fontTitle);
 		paragraph.setAlignment(Paragraph.ALIGN_CENTER);
-
-		Font fontParagraph = FontFactory.getFont(FontFactory.HELVETICA);
-		fontParagraph.setSize(12);
+		paragraph.setSpacingAfter(10);
+		paragraph.setSpacingBefore(35);
 		document.add(paragraph);
 
 		// tabela
 		PdfPTable table = new PdfPTable(5);
 		table.setWidthPercentage(100f);
 		table.setWidths(new float[] { 1.5f, 3.5f, 4.0f, 3.0f, 2.5f });
-		table.setSpacingBefore(10);
 
 		// escrevendo header da tabela
 		PdfPCell cell = new PdfPCell();
@@ -349,16 +357,14 @@ public class GeradorDePdfService {
 
 		Paragraph paragraph = new Paragraph("Hospitais com ocupação menor que 90%", fontTitle);
 		paragraph.setAlignment(Paragraph.ALIGN_CENTER);
-
-		Font fontParagraph = FontFactory.getFont(FontFactory.HELVETICA);
-		fontParagraph.setSize(12);
+		paragraph.setSpacingAfter(10);
+		paragraph.setSpacingBefore(35);
 		document.add(paragraph);
 
 		// tabela
 		PdfPTable table = new PdfPTable(5);
 		table.setWidthPercentage(100f);
 		table.setWidths(new float[] { 1.5f, 3.5f, 4.0f, 3.0f, 2.5f });
-		table.setSpacingBefore(10);
 
 		// escrevendo header da tabela
 		PdfPCell cell = new PdfPCell();

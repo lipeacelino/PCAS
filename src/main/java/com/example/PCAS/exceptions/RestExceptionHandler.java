@@ -1,5 +1,6 @@
 package com.example.PCAS.exceptions;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -8,18 +9,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.lowagie.text.DocumentException;
+
 @RestControllerAdvice
 public class RestExceptionHandler {
 
 	@ExceptionHandler(ErroDeValidacaoException.class)
-    public ResponseEntity clienteNaoEncontrado(ErroDeValidacaoException ex) {
+    public ResponseEntity erroDeValidacao(ErroDeValidacaoException ex) {
         ErroDetalhes erroDetalhes = ErroDetalhes.builder()
                 .timestamp(this.getDataFormatada())
-                .status(HttpStatus.NOT_FOUND.value())
-                .error(HttpStatus.NOT_FOUND.name())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(HttpStatus.BAD_REQUEST.name())
                 .message(ex.getMessage()).build();
 
-        return new ResponseEntity(erroDetalhes, HttpStatus.NOT_FOUND);
+        return new ResponseEntity(erroDetalhes, HttpStatus.BAD_REQUEST);
+    }
+	
+	@ExceptionHandler({IOException.class, DocumentException.class})
+	public ResponseEntity erroAoGerarRelatorio(ErroDeValidacaoException ex) {
+        ErroDetalhes erroDetalhes = ErroDetalhes.builder()
+                .timestamp(this.getDataFormatada())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(HttpStatus.BAD_REQUEST.name())
+                .message(ex.getMessage()).build();
+
+        return new ResponseEntity(erroDetalhes, HttpStatus.BAD_REQUEST);
     }
 	
 	private String getDataFormatada() {

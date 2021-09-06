@@ -3,7 +3,6 @@ package com.example.PCAS.entities;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
