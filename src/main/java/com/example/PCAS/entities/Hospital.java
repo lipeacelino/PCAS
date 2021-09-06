@@ -48,8 +48,9 @@ public class Hospital {
 	
 	//A cada transação as datas são atualizadas, a data mais velha pertence ao 
 	//hospital que mantém o percentual de ocupação a mais tempo
+	@JsonIgnore
 	private Date dateTimeMaiorQue90; 
-	
+	@JsonIgnore
 	private Date dateTimeMenorQue90; 
 	
 	@PrePersist
