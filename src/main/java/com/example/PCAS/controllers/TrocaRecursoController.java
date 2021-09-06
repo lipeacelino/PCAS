@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.PCAS.DTO.TrocaDeRecursosDTO;
 import com.example.PCAS.entities.Hospital;
-import com.example.PCAS.services.IntercambioRecursoService;
+import com.example.PCAS.services.TrocaRecursoService;
 
 @RestController
 @RequestMapping("/hospital/trocar-recursos")
-public class IntercambioRecursoController {
+public class TrocaRecursoController {
 	
 	@Autowired
-	private IntercambioRecursoService interRecService;
+	private TrocaRecursoService interRecService;
 	
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping("/{idHosp1}/{idHosp2}") 

@@ -3,16 +3,19 @@ package com.example.PCAS.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.PCAS.entities.HistoricoTransacao;
 import com.example.PCAS.entities.Hospital;
 import com.example.PCAS.entities.Recurso;
 import com.example.PCAS.exceptions.ErroDeValidacaoException;
 import com.example.PCAS.repositories.HospitalRepository;
 
 @Service
-public class IntercambioRecursoService {
+public class TrocaRecursoService {
 	
 	@Autowired
 	private HospitalRepository hospitalRepository;
+	@Autowired
+	private HistoricoTransacaoService histTransacaoService;
 
 	public Hospital trocarRecursos(Long idHosp1, Long idHosp2, Recurso recHosp1, Recurso recHosp2) {
 		
@@ -63,8 +66,18 @@ public class IntercambioRecursoService {
 		recHospJaSalvo2.setTomografo((recHospJaSalvo2.getTomografo() - recHosp2.getTomografo()) + recHosp1.getTomografo());
 		
 		hospitalRepository.save(hospJaSalvo2);
+		Hospital hospital = hospitalRepository.save(hospJaSalvo1);
 		
-		return hospitalRepository.save(hospJaSalvo1);
+		HistoricoTransacao ht = HistoricoTransacao
+				.builder()
+				.h1(hospJaSalvo1)
+				.h2(hospJaSalvo2)
+				.recurso1(recHosp1)
+				.recurso2(recHosp2)
+				.build();
+		histTransacaoService.addTransacao(ht);
+		
+		return hospital;
 		
 	}
 	

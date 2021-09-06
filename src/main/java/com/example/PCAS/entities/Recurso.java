@@ -33,5 +33,11 @@ public class Recurso {
 	private Integer respirador;
 	private Integer tomografo;
 	private Integer ambulancia;
+	@Override
+	public String toString() {
+		return "Médico=" + medico + ", Enfermeiro=" + enfermeiro + ", Respirador=" + respirador
+				+ ", Tomografo=" + tomografo + ", Ambulancia=" + ambulancia;
+	}
+	
 	
 }

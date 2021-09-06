@@ -19,7 +19,7 @@ import com.example.PCAS.services.GeradorDePdfService;
 public class GeradorDePdfController {
 
 	@Autowired
-	GeradorDePdfService service;
+	private GeradorDePdfService service;
 	
 	@GetMapping
 	public void gerarRelatorio(HttpServletResponse response) throws IOException {
@@ -31,7 +31,7 @@ public class GeradorDePdfController {
         String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
         response.setHeader(headerKey, headerValue);
 
-        this.service.gerarRelatorio(response);
+        service.gerarRelatorio(response);
 	}
 	
 }

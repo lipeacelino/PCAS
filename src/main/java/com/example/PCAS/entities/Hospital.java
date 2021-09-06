@@ -1,11 +1,15 @@
 package com.example.PCAS.entities;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -41,5 +45,24 @@ public class Hospital {
 	
 	@OneToOne
 	private Localizacao localizacao;
+	
+	//A cada transação as datas são atualizadas, a data mais velha pertence ao 
+	//hospital que mantém o percentual de ocupação a mais tempo
+	private Date dateTimeMaiorQue90; 
+	
+	private Date dateTimeMenorQue90; 
+	
+	@PrePersist
+	public void verificaSuperlotacaoInicial() {
+		if (percOcupacao > 90) {
+			this.dateTimeMaiorQue90 = new Date();
+			this.dateTimeMenorQue90 = null;
+		} else {
+			this.dateTimeMenorQue90 = new Date();
+			this.dateTimeMaiorQue90 = null;
+		}
+	}
+	
+	
 	
 }
