@@ -38,7 +38,7 @@ public class TrocaRecursoService {
 		int pontuacaoHosp2 = (recHosp2.getMedico() * 3) + (recHosp2.getEnfermeiro() * 3) + (recHosp2.getRespirador() * 5) 
 				+ (recHosp2.getTomografo() * 12) + (recHosp2.getAmbulancia() * 10);
 		
-		if((pontuacaoHosp1 == pontuacaoHosp2) || (hosp1.getPercOcupacao() > 90)) {
+		if((pontuacaoHosp1 == pontuacaoHosp2) || (hosp1.getPercOcupacao() > 90) || (hosp2.getPercOcupacao() > 90)) {
 			return true;
 		} 
 		
