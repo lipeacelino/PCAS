@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(description = "Responsável por gerar o relatório")
 @RestController
-@RequestMapping("/relatorio")
+@RequestMapping("/hospital/relatorio")
 public class GeradorDePdfController {
 
 	@Autowired

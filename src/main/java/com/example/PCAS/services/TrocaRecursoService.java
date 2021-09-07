@@ -24,7 +24,7 @@ public class TrocaRecursoService {
 		if (verificaPossibilidadeDeEfetuarTroca(hospJaSalvo1, hospJaSalvo2)) {
 			return efetivarTroca(hospJaSalvo1, hospJaSalvo2, recHosp1, recHosp2);
 		} else {
-			throw new ErroDeValidacaoException("Não foi possível concluir a troca de recursos!");
+			throw new ErroDeValidacaoException("Não foi possível concluir a troca de recursos");
 		}
 	}
 	

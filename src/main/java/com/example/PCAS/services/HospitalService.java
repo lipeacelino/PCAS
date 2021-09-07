@@ -34,7 +34,7 @@ public class HospitalService {
 	}
 
 	public Hospital updatePercOcupacao(Long id, Integer perOcupacao) {
-		Hospital hospital = hospRepository.findById(id).get();
+		Hospital hospital = findById(id);
 		hospital.setPercOcupacao(perOcupacao);
 		if (hospital.getPercOcupacao() > 90) {
 			hospital.setDateTimeMaiorQue90(new Date());
