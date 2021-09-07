@@ -35,7 +35,7 @@ public class TrocaRecursoController {
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(path="/{idHosp1}/{idHosp2}", produces="application/json", consumes="application/json") 
 	public Hospital trocarRecursos(@PathVariable Long idHosp1, @PathVariable Long idHosp2,
-			@RequestBody TrocaDeRecursosDTO recursosParaTroca ) { //hosp1 é o hospital que toma a iniciativa da troca e é ele que será retornado
+			@RequestBody TrocaDeRecursosDTO recursosParaTroca ) { //idHosp1 é o hospital que toma a iniciativa da troca e é ele que será retornado
 		return interRecService.trocarRecursos(idHosp1, idHosp2, recursosParaTroca.getRecursosHosp1(), recursosParaTroca.getRecursosHosp2());
 	}
 	

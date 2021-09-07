@@ -34,7 +34,7 @@ public class HospitalController {
 	@ApiOperation(value = "Cadastra e retorna hospital cadastrado")
 	@ApiResponses(value = {
 		    @ApiResponse(code = 201, message = "Hospital cadastrado com sucesso"),
-		    
+		    @ApiResponse(code = 400, message = "Erro ao cadastrar hospital")
 		})
 	@PostMapping(produces="application/json", consumes="application/json")
 	@ResponseStatus(HttpStatus.CREATED)

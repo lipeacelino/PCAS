@@ -48,11 +48,14 @@ public class HospitalControllerTest {
 	@Test
 	public void deveAdicionarHospital() throws Exception {
 
-		Hospital hosp = new Hospital();
+		Hospital hosp = Hospital.builder().id(1L).build();
+		
+		given(service.addHospital(Mockito.any())).willReturn(hosp);
 
 		mvc.perform(post("/hospital")
 				.contentType(MediaType.APPLICATION_JSON).content(toJson(hosp)))
-				.andExpect(status().is(201));
+				.andExpect(status().is(201))
+				.andExpect(jsonPath("$.id").value("1"));
 
 	}
 	
