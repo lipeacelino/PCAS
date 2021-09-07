@@ -6,4 +6,4 @@
 
 * Eu optei por gerar um único relatório com todos os requisitos que foi pedido na descrição do problema
 	  
-* Pela descrição do problema os hospitais com ocupção igual a 90% não estavam inclusos em nenhum relatório, portanto tomei a liberdade de uma tabela de criar hospitais com ocupação igual a 90%
+* Pela descrição do problema os hospitais com ocupção igual a 90% não estavam inclusos em nenhum relatório, portanto tomei a liberdade de criar uma tabela de hospitais com ocupação igual a 90%
